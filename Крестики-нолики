@@ -1,0 +1,2258 @@
+from random import choice
+from time import sleep
+
+size = ""
+column_name = ["a", "b", "c", "d", "e"]
+row_number = ["1", "2", "3", "4", "5"]
+moves = set()
+game_over = 0
+print(
+    """Выберите размер поля
+3: 3x3
+4: 4x4
+5: 5x5"""
+)
+while 1:
+    size = input()
+    if size == "3" or size == "4" or size == "5":
+        break
+    else:
+        print(
+            """
+Неверный ввод
+Введите 3, 4 или 5"""
+        )
+size = int(size)
+pole = [[" "] * size for _ in range(size)]
+print(f"\nХод 0")
+print(" ", end=".")
+for i in range(size):
+    print(column_name[i], sep=".", end=".")
+print()
+for j in range(size):
+    print(row_number[j], end=".")
+    for i in range(size):
+        print(pole[j][i], sep=".", end=".")
+    print()
+print(
+    """Выберите, чем будете играть - x или o:
+Введите 1 или 0"""
+)
+while 1:
+    ind = input()
+    if ind == "1" or ind == "0":
+        break
+    else:
+        print(
+            """Неверный ввод
+Введите 1 или 0"""
+        )
+if ind == "1":
+    ind = "x"
+    ind_npc = "o"
+if ind == "0":
+    ind = "o"
+    ind_npc = "x"
+while 1:
+    if size == 3:
+        all_moves = {"a1", "b1", "c1", "a2", "b2", "c2", "a3", "b3", "c3"}
+        if ind == "x":
+            # Первый ход игрока
+            print(
+                """\nХодите:
+Введите имя столбца и номер строки, например:
+b1 (на английской раскладке клавиатуры)"""
+            )
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind
+            print(f"\nХод 1 (player): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            # Первый ход NPC
+            if pole[1][1] == " ":
+                move = "b2"
+            else:
+                move = choice(["a1", "c1", "a3", "c3"])
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = "o"
+            print(f"\nХод 1 (NPC): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            # Второй ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind
+            print(f"\nХод 2 (player): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            # Второй ход NPC
+            if [pole[0][0], pole[0][1], pole[0][2]].count("x") == 2 and [
+                pole[0][0],
+                pole[0][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 1:
+                    move = "b1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[1][0], pole[1][1], pole[1][2]].count("x") == 2 and [
+                pole[1][0],
+                pole[1][1],
+                pole[1][2],
+            ].count(" ") == 1:
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 0:
+                    move = "a2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 2:
+                    move = "c2"
+            elif [pole[2][0], pole[2][1], pole[2][2]].count("x") == 2 and [
+                pole[2][0],
+                pole[2][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 1:
+                    move = "b3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][0], pole[2][0]].count("x") == 2 and [
+                pole[0][0],
+                pole[1][0],
+                pole[2][0],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 1:
+                    move = "a2"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 2:
+                    move = "a3"
+            elif [pole[0][1], pole[1][1], pole[2][1]].count("x") == 2 and [
+                pole[0][1],
+                pole[1][1],
+                pole[2][1],
+            ].count(" ") == 1:
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 0:
+                    move = "b1"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 2:
+                    move = "b3"
+            elif [pole[0][2], pole[1][2], pole[2][2]].count("x") == 2 and [
+                pole[0][2],
+                pole[1][2],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 0:
+                    move = "c1"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 1:
+                    move = "c2"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][1], pole[2][2]].count("x") == 2 and [
+                pole[0][0],
+                pole[1][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[2][0], pole[1][1], pole[0][2]].count("x") == 2 and [
+                pole[2][0],
+                pole[1][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            else:
+                move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = "o"
+            print(f"\nХод 2 (NPC): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            # Третий ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind
+            print(f"\nХод 3 (player): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            # Третий ход NPC
+            if [pole[0][0], pole[0][1], pole[0][2]].count("o") == 2 and [
+                pole[0][0],
+                pole[0][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                game_over = 1
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 1:
+                    move = "b1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[1][0], pole[1][1], pole[1][2]].count("o") == 2 and [
+                pole[1][0],
+                pole[1][1],
+                pole[1][2],
+            ].count(" ") == 1:
+                game_over = 1
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 0:
+                    move = "a2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 2:
+                    move = "c2"
+            elif [pole[2][0], pole[2][1], pole[2][2]].count("o") == 2 and [
+                pole[2][0],
+                pole[2][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                game_over = 1
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 1:
+                    move = "b3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][0], pole[2][0]].count("o") == 2 and [
+                pole[0][0],
+                pole[1][0],
+                pole[2][0],
+            ].count(" ") == 1:
+                game_over = 1
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 1:
+                    move = "a2"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 2:
+                    move = "a3"
+            elif [pole[0][1], pole[1][1], pole[2][1]].count("o") == 2 and [
+                pole[0][1],
+                pole[1][1],
+                pole[2][1],
+            ].count(" ") == 1:
+                game_over = 1
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 0:
+                    move = "b1"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 2:
+                    move = "b3"
+            elif [pole[0][2], pole[1][2], pole[2][2]].count("o") == 2 and [
+                pole[0][2],
+                pole[1][2],
+                pole[2][2],
+            ].count(" ") == 1:
+                game_over = 1
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 0:
+                    move = "c1"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 1:
+                    move = "c2"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][1], pole[2][2]].count("o") == 2 and [
+                pole[0][0],
+                pole[1][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                game_over = 1
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[2][0], pole[1][1], pole[0][2]].count("o") == 2 and [
+                pole[2][0],
+                pole[1][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                game_over = 1
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[0][0], pole[0][1], pole[0][2]].count("x") == 2 and [
+                pole[0][0],
+                pole[0][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 1:
+                    move = "b1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[1][0], pole[1][1], pole[1][2]].count("x") == 2 and [
+                pole[1][0],
+                pole[1][1],
+                pole[1][2],
+            ].count(" ") == 1:
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 0:
+                    move = "a2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 2:
+                    move = "c2"
+            elif [pole[2][0], pole[2][1], pole[2][2]].count("x") == 2 and [
+                pole[2][0],
+                pole[2][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 1:
+                    move = "b3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][0], pole[2][0]].count("x") == 2 and [
+                pole[0][0],
+                pole[1][0],
+                pole[2][0],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 1:
+                    move = "a2"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 2:
+                    move = "a3"
+            elif [pole[0][1], pole[1][1], pole[2][1]].count("x") == 2 and [
+                pole[0][1],
+                pole[1][1],
+                pole[2][1],
+            ].count(" ") == 1:
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 0:
+                    move = "b1"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 2:
+                    move = "b3"
+            elif [pole[0][2], pole[1][2], pole[2][2]].count("x") == 2 and [
+                pole[0][2],
+                pole[1][2],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 0:
+                    move = "c1"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 1:
+                    move = "c2"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][1], pole[2][2]].count("x") == 2 and [
+                pole[0][0],
+                pole[1][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[2][0], pole[1][1], pole[0][2]].count("x") == 2 and [
+                pole[2][0],
+                pole[1][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            else:
+                move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = "o"
+            print(f"\nХод 3 (NPC): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            if game_over == 1:
+                print(
+                    """Игра окончена:
+Вы проиграли... ☔"""
+                )
+                sleep(5)
+                break
+            # Четвертый ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind
+            print(f"\nХод 4 (player): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            if (
+                [pole[0][0], pole[0][1], pole[0][2]].count("x") == 3
+                or [pole[1][0], pole[1][1], pole[1][2]].count("x") == 3
+                or [pole[2][0], pole[2][1], pole[2][2]].count("x") == 3
+                or [pole[0][0], pole[1][0], pole[2][0]].count("x") == 3
+                or [pole[0][1], pole[1][1], pole[2][1]].count("x") == 3
+                or [pole[0][2], pole[1][2], pole[2][2]].count("x") == 3
+                or [pole[0][0], pole[1][1], pole[2][2]].count("x") == 3
+                or [pole[2][0], pole[1][1], pole[0][2]].count("x") == 3
+            ):
+                game_over = 1
+            if game_over == 1:
+                print(
+                    """Игра окончена:
+Вы выиграли!!! 🌈"""
+                )
+                sleep(5)
+                break
+            # Четвертый ход NPC
+            if [pole[0][0], pole[0][1], pole[0][2]].count("o") == 2 and [
+                pole[0][0],
+                pole[0][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 1:
+                    move = "b1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[1][0], pole[1][1], pole[1][2]].count("o") == 2 and [
+                pole[1][0],
+                pole[1][1],
+                pole[1][2],
+            ].count(" ") == 1:
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 0:
+                    move = "a2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 2:
+                    move = "c2"
+            elif [pole[2][0], pole[2][1], pole[2][2]].count("o") == 2 and [
+                pole[2][0],
+                pole[2][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 1:
+                    move = "b3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][0], pole[2][0]].count("o") == 2 and [
+                pole[0][0],
+                pole[1][0],
+                pole[2][0],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 1:
+                    move = "a2"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 2:
+                    move = "a3"
+            elif [pole[0][1], pole[1][1], pole[2][1]].count("o") == 2 and [
+                pole[0][1],
+                pole[1][1],
+                pole[2][1],
+            ].count(" ") == 1:
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 0:
+                    move = "b1"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 2:
+                    move = "b3"
+            elif [pole[0][2], pole[1][2], pole[2][2]].count("o") == 2 and [
+                pole[0][2],
+                pole[1][2],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 0:
+                    move = "c1"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 1:
+                    move = "c2"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][1], pole[2][2]].count("o") == 2 and [
+                pole[0][0],
+                pole[1][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[2][0], pole[1][1], pole[0][2]].count("o") == 2 and [
+                pole[2][0],
+                pole[1][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[0][0], pole[0][1], pole[0][2]].count("x") == 2 and [
+                pole[0][0],
+                pole[0][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 1:
+                    move = "b1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[1][0], pole[1][1], pole[1][2]].count("x") == 2 and [
+                pole[1][0],
+                pole[1][1],
+                pole[1][2],
+            ].count(" ") == 1:
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 0:
+                    move = "a2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 2:
+                    move = "c2"
+            elif [pole[2][0], pole[2][1], pole[2][2]].count("x") == 2 and [
+                pole[2][0],
+                pole[2][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 1:
+                    move = "b3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][0], pole[2][0]].count("x") == 2 and [
+                pole[0][0],
+                pole[1][0],
+                pole[2][0],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 1:
+                    move = "a2"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 2:
+                    move = "a3"
+            elif [pole[0][1], pole[1][1], pole[2][1]].count("x") == 2 and [
+                pole[0][1],
+                pole[1][1],
+                pole[2][1],
+            ].count(" ") == 1:
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 0:
+                    move = "b1"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 2:
+                    move = "b3"
+            elif [pole[0][2], pole[1][2], pole[2][2]].count("x") == 2 and [
+                pole[0][2],
+                pole[1][2],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 0:
+                    move = "c1"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 1:
+                    move = "c2"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][1], pole[2][2]].count("x") == 2 and [
+                pole[0][0],
+                pole[1][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[2][0], pole[1][1], pole[0][2]].count("x") == 2 and [
+                pole[2][0],
+                pole[1][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            else:
+                move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = "o"
+            print(f"\nХод 4 (NPC): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            if (
+                [pole[0][0], pole[0][1], pole[0][2]].count("o") == 3
+                or [pole[1][0], pole[1][1], pole[1][2]].count("o") == 3
+                or [pole[2][0], pole[2][1], pole[2][2]].count("o") == 3
+                or [pole[0][0], pole[1][0], pole[2][0]].count("o") == 3
+                or [pole[0][1], pole[1][1], pole[2][1]].count("o") == 3
+                or [pole[0][2], pole[1][2], pole[2][2]].count("o") == 3
+                or [pole[0][0], pole[1][1], pole[2][2]].count("o") == 3
+                or [pole[2][0], pole[1][1], pole[0][2]].count("o") == 3
+            ):
+                game_over = 1
+            if game_over == 1:
+                print(
+                    """Игра окончена:
+Вы проиграли... ☔"""
+                )
+                sleep(5)
+                break
+            # Пятый ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind
+            print(f"\nХод 5 (player): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            if (
+                [pole[0][0], pole[0][1], pole[0][2]].count("x") == 3
+                or [pole[1][0], pole[1][1], pole[1][2]].count("x") == 3
+                or [pole[2][0], pole[2][1], pole[2][2]].count("x") == 3
+                or [pole[0][0], pole[1][0], pole[2][0]].count("x") == 3
+                or [pole[0][1], pole[1][1], pole[2][1]].count("x") == 3
+                or [pole[0][2], pole[1][2], pole[2][2]].count("x") == 3
+                or [pole[0][0], pole[1][1], pole[2][2]].count("x") == 3
+                or [pole[2][0], pole[1][1], pole[0][2]].count("x") == 3
+            ):
+                print(
+                    """Игра окончена:
+Вы выиграли!!! 🌈"""
+                )
+                sleep(5)
+                break
+            else:
+                print(
+                    """Игра окончена:
+Ничья! ⛅"""
+                )
+                sleep(5)
+                break
+        if ind == "o":
+            # Первый ход NPC
+            move = "b2"
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = "x"
+            print(f"\nХод 1 (NPC): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            # Первый ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind
+            print(f"\nХод 1 (player): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            # Второй ход NPC
+            if (
+                pole[0][0] == " "
+                and pole[2][0] == " "
+                and pole[2][2] == " "
+                and pole[0][2] == " "
+            ):
+                move = choice(["a1", "c1", "a3", "c3"])
+            else:
+                move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = "x"
+            print(f"\nХод 2 (NPC): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            # Второй ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind
+            print(f"\nХод 2 (player): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            # Третий ход NPC
+            if [pole[0][0], pole[0][1], pole[0][2]].count("x") == 2 and [
+                pole[0][0],
+                pole[0][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 1:
+                    move = "b1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[1][0], pole[1][1], pole[1][2]].count("x") == 2 and [
+                pole[1][0],
+                pole[1][1],
+                pole[1][2],
+            ].count(" ") == 1:
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 0:
+                    move = "a2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 2:
+                    move = "c2"
+            elif [pole[2][0], pole[2][1], pole[2][2]].count("x") == 2 and [
+                pole[2][0],
+                pole[2][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 1:
+                    move = "b3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][0], pole[2][0]].count("x") == 2 and [
+                pole[0][0],
+                pole[1][0],
+                pole[2][0],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 1:
+                    move = "a2"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 2:
+                    move = "a3"
+            elif [pole[0][1], pole[1][1], pole[2][1]].count("x") == 2 and [
+                pole[0][1],
+                pole[1][1],
+                pole[2][1],
+            ].count(" ") == 1:
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 0:
+                    move = "b1"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 2:
+                    move = "b3"
+            elif [pole[0][2], pole[1][2], pole[2][2]].count("x") == 2 and [
+                pole[0][2],
+                pole[1][2],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 0:
+                    move = "c1"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 1:
+                    move = "c2"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][1], pole[2][2]].count("x") == 2 and [
+                pole[0][0],
+                pole[1][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[2][0], pole[1][1], pole[0][2]].count("x") == 2 and [
+                pole[2][0],
+                pole[1][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[0][0], pole[0][1], pole[0][2]].count("o") == 2 and [
+                pole[0][0],
+                pole[0][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 1:
+                    move = "b1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[1][0], pole[1][1], pole[1][2]].count("o") == 2 and [
+                pole[1][0],
+                pole[1][1],
+                pole[1][2],
+            ].count(" ") == 1:
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 0:
+                    move = "a2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 2:
+                    move = "c2"
+            elif [pole[2][0], pole[2][1], pole[2][2]].count("o") == 2 and [
+                pole[2][0],
+                pole[2][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 1:
+                    move = "b3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][0], pole[2][0]].count("o") == 2 and [
+                pole[0][0],
+                pole[1][0],
+                pole[2][0],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 1:
+                    move = "a2"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 2:
+                    move = "a3"
+            elif [pole[0][1], pole[1][1], pole[2][1]].count("o") == 2 and [
+                pole[0][1],
+                pole[1][1],
+                pole[2][1],
+            ].count(" ") == 1:
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 0:
+                    move = "b1"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 2:
+                    move = "b3"
+            elif [pole[0][2], pole[1][2], pole[2][2]].count("o") == 2 and [
+                pole[0][2],
+                pole[1][2],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 0:
+                    move = "c1"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 1:
+                    move = "c2"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][1], pole[2][2]].count("o") == 2 and [
+                pole[0][0],
+                pole[1][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[2][0], pole[1][1], pole[0][2]].count("o") == 2 and [
+                pole[2][0],
+                pole[1][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            else:
+                move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = "x"
+            print(f"\nХод 3 (NPC): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            if (
+                [pole[0][0], pole[0][1], pole[0][2]].count("x") == 3
+                or [pole[1][0], pole[1][1], pole[1][2]].count("x") == 3
+                or [pole[2][0], pole[2][1], pole[2][2]].count("x") == 3
+                or [pole[0][0], pole[1][0], pole[2][0]].count("x") == 3
+                or [pole[0][1], pole[1][1], pole[2][1]].count("x") == 3
+                or [pole[0][2], pole[1][2], pole[2][2]].count("x") == 3
+                or [pole[0][0], pole[1][1], pole[2][2]].count("x") == 3
+                or [pole[2][0], pole[1][1], pole[0][2]].count("x") == 3
+            ):
+                game_over = 1
+            if game_over == 1:
+                print(
+                    """Игра окончена:
+Вы проиграли... ☔"""
+                )
+                sleep(5)
+                break
+            # Третий ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind
+            print(f"\nХод 3 (player): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            # Четвертый ход NPC
+            if [pole[0][0], pole[0][1], pole[0][2]].count("x") == 2 and [
+                pole[0][0],
+                pole[0][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 1:
+                    move = "b1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[1][0], pole[1][1], pole[1][2]].count("x") == 2 and [
+                pole[1][0],
+                pole[1][1],
+                pole[1][2],
+            ].count(" ") == 1:
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 0:
+                    move = "a2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 2:
+                    move = "c2"
+            elif [pole[2][0], pole[2][1], pole[2][2]].count("x") == 2 and [
+                pole[2][0],
+                pole[2][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 1:
+                    move = "b3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][0], pole[2][0]].count("x") == 2 and [
+                pole[0][0],
+                pole[1][0],
+                pole[2][0],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 1:
+                    move = "a2"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 2:
+                    move = "a3"
+            elif [pole[0][1], pole[1][1], pole[2][1]].count("x") == 2 and [
+                pole[0][1],
+                pole[1][1],
+                pole[2][1],
+            ].count(" ") == 1:
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 0:
+                    move = "b1"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 2:
+                    move = "b3"
+            elif [pole[0][2], pole[1][2], pole[2][2]].count("x") == 2 and [
+                pole[0][2],
+                pole[1][2],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 0:
+                    move = "c1"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 1:
+                    move = "c2"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][1], pole[2][2]].count("x") == 2 and [
+                pole[0][0],
+                pole[1][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[2][0], pole[1][1], pole[0][2]].count("x") == 2 and [
+                pole[2][0],
+                pole[1][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[0][0], pole[0][1], pole[0][2]].count("o") == 2 and [
+                pole[0][0],
+                pole[0][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 1:
+                    move = "b1"
+                if ([pole[0][0], pole[0][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            elif [pole[1][0], pole[1][1], pole[1][2]].count("o") == 2 and [
+                pole[1][0],
+                pole[1][1],
+                pole[1][2],
+            ].count(" ") == 1:
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 0:
+                    move = "a2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[1][0], pole[1][1], pole[1][2]].index(" ")) == 2:
+                    move = "c2"
+            elif [pole[2][0], pole[2][1], pole[2][2]].count("o") == 2 and [
+                pole[2][0],
+                pole[2][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 1:
+                    move = "b3"
+                if ([pole[2][0], pole[2][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][0], pole[2][0]].count("o") == 2 and [
+                pole[0][0],
+                pole[1][0],
+                pole[2][0],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 1:
+                    move = "a2"
+                if ([pole[0][0], pole[1][0], pole[2][0]].index(" ")) == 2:
+                    move = "a3"
+            elif [pole[0][1], pole[1][1], pole[2][1]].count("o") == 2 and [
+                pole[0][1],
+                pole[1][1],
+                pole[2][1],
+            ].count(" ") == 1:
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 0:
+                    move = "b1"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][1], pole[1][1], pole[2][1]].index(" ")) == 2:
+                    move = "b3"
+            elif [pole[0][2], pole[1][2], pole[2][2]].count("o") == 2 and [
+                pole[0][2],
+                pole[1][2],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 0:
+                    move = "c1"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 1:
+                    move = "c2"
+                if ([pole[0][2], pole[1][2], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[0][0], pole[1][1], pole[2][2]].count("o") == 2 and [
+                pole[0][0],
+                pole[1][1],
+                pole[2][2],
+            ].count(" ") == 1:
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 0:
+                    move = "a1"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[0][0], pole[1][1], pole[2][2]].index(" ")) == 2:
+                    move = "c3"
+            elif [pole[2][0], pole[1][1], pole[0][2]].count("o") == 2 and [
+                pole[2][0],
+                pole[1][1],
+                pole[0][2],
+            ].count(" ") == 1:
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 0:
+                    move = "a3"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 1:
+                    move = "b2"
+                if ([pole[2][0], pole[1][1], pole[0][2]].index(" ")) == 2:
+                    move = "c1"
+            else:
+                move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = "x"
+            print(f"\nХод 4 (NPC): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            if (
+                [pole[0][0], pole[0][1], pole[0][2]].count("x") == 3
+                or [pole[1][0], pole[1][1], pole[1][2]].count("x") == 3
+                or [pole[2][0], pole[2][1], pole[2][2]].count("x") == 3
+                or [pole[0][0], pole[1][0], pole[2][0]].count("x") == 3
+                or [pole[0][1], pole[1][1], pole[2][1]].count("x") == 3
+                or [pole[0][2], pole[1][2], pole[2][2]].count("x") == 3
+                or [pole[0][0], pole[1][1], pole[2][2]].count("x") == 3
+                or [pole[2][0], pole[1][1], pole[0][2]].count("x") == 3
+            ):
+                game_over = 1
+            if game_over == 1:
+                print(
+                    """Игра окончена:
+Вы проиграли... ☔"""
+                )
+                sleep(5)
+                break
+            # Четвертый ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind
+            print(f"\nХод 4 (player): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            if (
+                [pole[0][0], pole[0][1], pole[0][2]].count("o") == 3
+                or [pole[1][0], pole[1][1], pole[1][2]].count("o") == 3
+                or [pole[2][0], pole[2][1], pole[2][2]].count("o") == 3
+                or [pole[0][0], pole[1][0], pole[2][0]].count("o") == 3
+                or [pole[0][1], pole[1][1], pole[2][1]].count("o") == 3
+                or [pole[0][2], pole[1][2], pole[2][2]].count("o") == 3
+                or [pole[0][0], pole[1][1], pole[2][2]].count("o") == 3
+                or [pole[2][0], pole[1][1], pole[0][2]].count("o") == 3
+            ):
+                game_over = 1
+            if game_over == 1:
+                print(
+                    """Игра окончена:
+Вы выиграли!!! 🌈"""
+                )
+                sleep(5)
+                break
+            # Пятый ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            pole[row_number.index(move[1])][column_name.index(move[0])] = "x"
+            print(f"\nХод 5 (NPC): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+            if (
+                [pole[0][0], pole[0][1], pole[0][2]].count("x") == 3
+                or [pole[1][0], pole[1][1], pole[1][2]].count("x") == 3
+                or [pole[2][0], pole[2][1], pole[2][2]].count("x") == 3
+                or [pole[0][0], pole[1][0], pole[2][0]].count("x") == 3
+                or [pole[0][1], pole[1][1], pole[2][1]].count("x") == 3
+                or [pole[0][2], pole[1][2], pole[2][2]].count("x") == 3
+                or [pole[0][0], pole[1][1], pole[2][2]].count("x") == 3
+                or [pole[2][0], pole[1][1], pole[0][2]].count("x") == 3
+            ):
+                print(
+                    """Игра окончена:
+Вы проиграли... ☔"""
+                )
+                sleep(5)
+                break
+            else:
+                print(
+                    """Игра окончена:
+Ничья! ⛅"""
+                )
+                sleep(5)
+                break
+    if size == 4:
+
+        def Printer_Player_move(step, move):
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind
+            print(f"\nХод {step} (player): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+
+        def Printer_NPC_move(step, move):
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind_npc
+            print(f"\nХод {step} (NPC): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+
+        def IsEnd(game):
+            if (
+                [pole[0][0], pole[0][1], pole[0][2], pole[0][3]].count(ind) == 4
+                or [pole[1][0], pole[1][1], pole[1][2], pole[1][3]].count(ind) == 4
+                or [pole[2][0], pole[2][1], pole[2][2], pole[2][3]].count(ind) == 4
+                or [pole[3][0], pole[3][1], pole[3][2], pole[3][3]].count(ind) == 4
+                or [pole[0][0], pole[1][0], pole[2][0], pole[3][0]].count(ind) == 4
+                or [pole[0][1], pole[1][1], pole[2][1], pole[3][1]].count(ind) == 4
+                or [pole[0][2], pole[1][2], pole[2][2], pole[3][2]].count(ind) == 4
+                or [pole[0][2], pole[1][2], pole[2][2], pole[3][3]].count(ind) == 4
+                or [pole[0][0], pole[1][1], pole[2][2], pole[3][3]].count(ind) == 4
+                or [pole[3][0], pole[2][1], pole[1][2], pole[0][3]].count(ind) == 4
+            ):
+                game = 1
+            if game == 1:
+                print(
+                    """Игра окончена:
+Вы выиграли!!! 🌈"""
+                )
+                sleep(5)
+                return game
+
+            if (
+                [pole[0][0], pole[0][1], pole[0][2], pole[0][3]].count(ind_npc) == 4
+                or [pole[1][0], pole[1][1], pole[1][2], pole[1][3]].count(ind_npc) == 4
+                or [pole[2][0], pole[2][1], pole[2][2], pole[2][3]].count(ind_npc) == 4
+                or [pole[3][0], pole[3][1], pole[3][2], pole[3][3]].count(ind_npc) == 4
+                or [pole[0][0], pole[1][0], pole[2][0], pole[3][0]].count(ind_npc) == 4
+                or [pole[0][1], pole[1][1], pole[2][1], pole[3][1]].count(ind_npc) == 4
+                or [pole[0][2], pole[1][2], pole[2][2], pole[3][2]].count(ind_npc) == 4
+                or [pole[0][3], pole[1][3], pole[2][3], pole[3][3]].count(ind_npc) == 4
+                or [pole[0][0], pole[1][1], pole[2][2], pole[3][3]].count(ind_npc) == 4
+                or [pole[3][0], pole[2][1], pole[1][2], pole[0][3]].count(ind_npc) == 4
+            ):
+                game = 1
+            if game == 1:
+                print(
+                    """Игра окончена:
+Вы проиграли... ☔"""
+                )
+                sleep(5)
+                return game
+
+        all_moves = set()
+        for i in range(size):
+            for j in range(size):
+                all_moves.add(column_name[i] + row_number[j])
+        if ind == "x":
+            # Первый ход игрока
+            print(
+                """\nХодите:
+Введите имя столбца и номер строки, например:
+b1 (на английской раскладке клавиатуры)"""
+            )
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(1, move)
+            # Первый ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(1, move)
+            # Второй ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(2, move)
+            # Второй ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(2, move)
+            # Третий ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(3, move)
+            # Третий ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(3, move)
+            # Четвертый ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(4, move)
+            if IsEnd(game_over) == 1:
+                break
+            # Четвертый ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(4, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 5 ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(5, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 5 ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(5, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 6 ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(6, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 6 ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(6, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 7 ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(7, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 7 ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(7, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 8 ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(8, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 8 ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(8, move)
+            if IsEnd(game_over) == 1:
+                break
+            print(
+                """Игра окончена:
+Ничья! ⛅"""
+            )
+            sleep(5)
+            break
+        if ind == "o":
+            # Первый ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(1, move)
+            # Первый ход игрока
+            print(
+                """\nХодите:
+Введите имя столбца и номер строки, например:
+b1 (на английской раскладке клавиатуры)"""
+            )
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(1, move)
+            # Второй ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(2, move)
+            # Второй ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(2, move)
+            # Третий ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(3, move)
+            # Третий ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(3, move)
+            # Четвертый ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(4, move)
+            if IsEnd(game_over) == 1:
+                break
+            # Четвертый ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(4, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 5 ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(5, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 5 ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(5, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 6 ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(6, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 6 ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(6, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 7 ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(7, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 7 ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(7, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 8 ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(8, move)
+            if IsEnd(game_over) == 1:
+                break
+            # 8 ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(8, move)
+            if IsEnd(game_over) == 1:
+                break
+            print(
+                """Игра окончена:
+Ничья! ⛅"""
+            )
+            sleep(5)
+            break
+    if size == 5:
+
+        def Printer_Player_move(step, move):
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind
+            print(f"\nХод {step} (player): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+
+        def Printer_NPC_move(step, move):
+            pole[row_number.index(move[1])][column_name.index(move[0])] = ind_npc
+            print(f"\nХод {step} (NPC): {move}")
+            print(" ", end=".")
+            for i in range(size):
+                print(column_name[i], sep=".", end=".")
+            print()
+            for j in range(size):
+                print(row_number[j], end=".")
+                for i in range(size):
+                    print(pole[j][i], end=".")
+                print()
+
+        def IsEnd(game):
+            if (
+                [pole[0][0], pole[0][1], pole[0][2], pole[0][3], pole[0][4]].count(ind)
+                == 5
+                or [pole[1][0], pole[1][1], pole[1][2], pole[1][3], pole[1][4]].count(
+                    ind
+                )
+                == 5
+                or [pole[2][0], pole[2][1], pole[2][2], pole[2][3], pole[2][4]].count(
+                    ind
+                )
+                == 5
+                or [pole[3][0], pole[3][1], pole[3][2], pole[3][3], pole[3][4]].count(
+                    ind
+                )
+                == 5
+                or [pole[4][0], pole[4][1], pole[4][2], pole[4][3], pole[4][4]].count(
+                    ind
+                )
+                == 5
+                or [pole[0][0], pole[1][0], pole[2][0], pole[3][0], pole[4][0]].count(
+                    ind
+                )
+                == 5
+                or [pole[0][1], pole[1][1], pole[2][1], pole[3][1], pole[4][1]].count(
+                    ind
+                )
+                == 5
+                or [pole[0][2], pole[1][2], pole[2][2], pole[3][2], pole[4][2]].count(
+                    ind
+                )
+                == 5
+                or [pole[0][3], pole[1][3], pole[2][3], pole[3][3], pole[4][3]].count(
+                    ind
+                )
+                == 5
+                or [pole[0][4], pole[1][4], pole[2][4], pole[3][4], pole[4][4]].count(
+                    ind
+                )
+                == 5
+                or [pole[0][0], pole[1][1], pole[2][2], pole[3][3], pole[4][4]].count(
+                    ind
+                )
+                == 5
+                or [pole[3][0], pole[2][1], pole[1][2], pole[0][3], pole[0][4]].count(
+                    ind
+                )
+                == 5
+            ):
+                game = 1
+            if game == 1:
+                print(
+                    """Игра окончена:
+Вы выиграли!!! 🌈"""
+                )
+                sleep(5)
+                return game
+
+            if (
+                [pole[0][0], pole[0][1], pole[0][2], pole[0][3], pole[0][4]].count(
+                    ind_npc
+                )
+                == 5
+                or [pole[1][0], pole[1][1], pole[1][2], pole[1][3], pole[1][4]].count(
+                    ind_npc
+                )
+                == 5
+                or [pole[2][0], pole[2][1], pole[2][2], pole[2][3], pole[2][4]].count(
+                    ind_npc
+                )
+                == 5
+                or [pole[3][0], pole[3][1], pole[3][2], pole[3][3], pole[3][4]].count(
+                    ind_npc
+                )
+                == 5
+                or [pole[4][0], pole[4][1], pole[4][2], pole[4][3], pole[4][4]].count(
+                    ind_npc
+                )
+                == 5
+                or [pole[0][0], pole[1][0], pole[2][0], pole[3][0], pole[4][0]].count(
+                    ind_npc
+                )
+                == 5
+                or [pole[0][1], pole[1][1], pole[2][1], pole[3][1], pole[4][1]].count(
+                    ind_npc
+                )
+                == 5
+                or [pole[0][2], pole[1][2], pole[2][2], pole[3][2], pole[4][2]].count(
+                    ind_npc
+                )
+                == 5
+                or [pole[0][3], pole[1][3], pole[2][3], pole[3][3], pole[4][3]].count(
+                    ind_npc
+                )
+                == 5
+                or [pole[0][4], pole[1][4], pole[2][4], pole[3][4], pole[4][4]].count(
+                    ind_npc
+                )
+                == 5
+                or [pole[0][0], pole[1][1], pole[2][2], pole[3][3], pole[4][4]].count(
+                    ind_npc
+                )
+                == 5
+                or [pole[3][0], pole[2][1], pole[1][2], pole[0][3], pole[0][4]].count(
+                    ind_npc
+                )
+                == 5
+            ):
+                game = 1
+            if game == 1:
+                print(
+                    """Игра окончена:
+Вы проиграли... ☔"""
+                )
+                sleep(5)
+                return game
+
+        all_moves = set()
+        for i in range(size):
+            for j in range(size):
+                all_moves.add(column_name[i] + row_number[j])
+        if ind == "x":
+            # Первый ход игрока
+            print(
+                """\nХодите:
+Введите имя столбца и номер строки, например:
+b1 (на английской раскладке клавиатуры)"""
+            )
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(1, move)
+            # Первый ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(1, move)
+            # Второй ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(2, move)
+            # Второй ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(2, move)
+            # Третий ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(3, move)
+            # Третий ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(3, move)
+            # Четвертый ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(4, move)
+            # Четвертый ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(4, move)
+            # Цикл 5-12 ходы Игрок-NPC
+            for i in range(5, 13):
+                # ход игрока
+                move = input()
+                while move not in all_moves:
+                    print(
+                        """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                    )
+                    move = input()
+                while move in moves:
+                    print(
+                        """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                    )
+                    move = input()
+                moves.add(move)
+                Printer_Player_move(i, move)
+                if IsEnd(game_over) == 1:
+                    break
+                # ход NPC
+                move = choice(tuple(all_moves - moves))
+                moves.add(move)
+                Printer_NPC_move(i, move)
+                if IsEnd(game_over) == 1:
+                    break
+            # 13 ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(13, move)
+            if IsEnd(game_over) == 1:
+                break
+            print(
+                """Игра окончена:
+Ничья! ⛅"""
+            )
+            sleep(5)
+            break
+        if ind == "o":
+            # Первый ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(1, move)
+            # Первый ход игрока
+            print(
+                """\nХодите:
+Введите имя столбца и номер строки, например:
+b1 (на английской раскладке клавиатуры)"""
+            )
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(1, move)
+            # Второй ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(2, move)
+            # Второй ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(2, move)
+            # Третий ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(3, move)
+            # Третий ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(3, move)
+            # Четвертый ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(4, move)
+            # Четвертый ход игрока
+            move = input()
+            while move not in all_moves:
+                print(
+                    """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                )
+                move = input()
+            while move in moves:
+                print(
+                    """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                )
+                move = input()
+            moves.add(move)
+            Printer_Player_move(4, move)
+            # Цикл 5-12 ходы NPC-игрок
+            for i in range(5, 13):
+                # ход NPC
+                move = choice(tuple(all_moves - moves))
+                moves.add(move)
+                Printer_NPC_move(i, move)
+                if IsEnd(game_over) == 1:
+                    break
+                # ход игрока
+                move = input()
+                while move not in all_moves:
+                    print(
+                        """Неверный ввод
+Введите (a, b или c) и (1, 2 или 3)
+Например: b2"""
+                    )
+                    move = input()
+                while move in moves:
+                    print(
+                        """Выбранное поле уже занято
+Введите свой ход еще раз"""
+                    )
+                    move = input()
+                moves.add(move)
+                Printer_Player_move(i, move)
+                if IsEnd(game_over) == 1:
+                    break
+            # 13 ход NPC
+            move = choice(tuple(all_moves - moves))
+            moves.add(move)
+            Printer_NPC_move(13, move)
+            if IsEnd(game_over) == 1:
+                break
+            print(
+                """Игра окончена:
+Ничья! ⛅"""
+            )
+            sleep(5)
+            break
